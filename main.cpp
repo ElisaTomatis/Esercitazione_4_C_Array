@@ -4,20 +4,15 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include "Utils.hpp" 
 
 using namespace std;
 
 int main() {
     ifstream inputFile("data.txt");
-    ofstream outputFile("result.txt");
 
     if (inputFile.fail()) {
         cerr << "Errore nell'apertura di data.txt" << endl;
-        return 1;
-    }
-    
-    if (outputFile.fail()) {
-        cerr << "Non è stato possibile creare il file result.txt" << endl;
         return 1;
     }
 
@@ -64,29 +59,11 @@ int main() {
     // Calcolo del valore finale del portafoglio
     double V = S * (1 + R);
 
-    // Scrittura dei dati su file
-    outputFile << fixed << setprecision(2);
-    outputFile << "S = " << S << ", n = " << n << endl;
-
-    outputFile << "w = [ ";
-    for (int j = 0; j < n; j++) {
-        outputFile << w[j] << " ";
+    // Scrittura su file usando funzione Utils
+    if (!ExportPortfolioResult("result.txt", S, V, R, n, w, r)) {
+        cerr << "Errore nella scrittura su result.txt" << endl;
+        return 1;
     }
-    outputFile << "]" << endl;
-
-    outputFile << "r = [ ";
-    for (int j = 0; j < n; j++) {
-        outputFile << r[j] << " ";
-    }
-    outputFile << "]" << endl;
-
-    outputFile << fixed << setprecision(4);
-    outputFile << "Rate of return of the portfolio: " << R << endl;
-
-    outputFile << fixed << setprecision(2);
-    outputFile << "V: " << V << endl;
-
-    outputFile.close();
 
     // Deallocazione della memoria dinamica
     delete[] w;
